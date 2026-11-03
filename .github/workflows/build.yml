@@ -9,6 +9,7 @@ on:
   push:
     branches:
       - master
+      - my-releases
 
 permissions:
   contents: write
@@ -218,12 +219,33 @@ jobs:
         distribution: 'temurin'
         java-version: '21'
 
-    - name: Decode Keystore
-      uses: timheuer/base64-to-file@v2.0.0
+    - name: Prepare Keystore
       id: android_keystore
-      with:
-        fileName: "android_keystore.jks"
-        encodedString: ${{ secrets.APP_KEYSTORE_BASE64 }}
+      env:
+        KEYSTORE_B64: ${{ secrets.APP_KEYSTORE_BASE64 }}
+        KEYSTORE_PASS: ${{ secrets.APP_KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.APP_KEYSTORE_ALIAS }}
+        KEY_PASS: ${{ secrets.APP_KEY_PASSWORD }}
+      run: |
+        KEYSTORE_PATH="${{ runner.temp }}/android_keystore.jks"
+        if [ -n "$KEYSTORE_B64" ]; then
+          printf '%s' "$KEYSTORE_B64" | base64 -d > "$KEYSTORE_PATH"
+          echo "filePath=$KEYSTORE_PATH" >> "$GITHUB_OUTPUT"
+          echo "storePassword=$KEYSTORE_PASS" >> "$GITHUB_OUTPUT"
+          echo "keyAlias=$KEY_ALIAS" >> "$GITHUB_OUTPUT"
+          echo "keyPassword=$KEY_PASS" >> "$GITHUB_OUTPUT"
+        else
+          keytool -genkeypair -v \
+            -keystore "$KEYSTORE_PATH" \
+            -keyalg RSA -keysize 2048 -validity 10000 \
+            -alias pattng \
+            -storepass pattng123 -keypass pattng123 \
+            -dname "CN=PattNG, OU=Dev, O=PattNG, L=Unknown, S=Unknown, C=US"
+          echo "filePath=$KEYSTORE_PATH" >> "$GITHUB_OUTPUT"
+          echo "storePassword=pattng123" >> "$GITHUB_OUTPUT"
+          echo "keyAlias=pattng" >> "$GITHUB_OUTPUT"
+          echo "keyPassword=pattng123" >> "$GITHUB_OUTPUT"
+        fi
 
     - name: Build APK
       run: |
@@ -234,7 +256,7 @@ jobs:
         # build before anything is assembled or signed.
         ./gradlew :app:testPlaystoreDebugUnitTest
         ./gradlew licenseFdroidReleaseReport
-        ./gradlew assembleRelease -PpattngVersion="${{ inputs.release_tag }}" -Pandroid.injected.signing.store.file=${{ steps.android_keystore.outputs.filePath }} -Pandroid.injected.signing.store.password=${{ secrets.APP_KEYSTORE_PASSWORD }} -Pandroid.injected.signing.key.alias=${{ secrets.APP_KEYSTORE_ALIAS }} -Pandroid.injected.signing.key.password=${{ secrets.APP_KEY_PASSWORD }}
+        ./gradlew assembleRelease -PpattngVersion="${{ inputs.release_tag }}" -Pandroid.injected.signing.store.file=${{ steps.android_keystore.outputs.filePath }} -Pandroid.injected.signing.store.password=${{ steps.android_keystore.outputs.storePassword }} -Pandroid.injected.signing.key.alias=${{ steps.android_keystore.outputs.keyAlias }} -Pandroid.injected.signing.key.password=${{ steps.android_keystore.outputs.keyPassword }}
     
     - name: Check the native libraries in the APKs
       run: |
