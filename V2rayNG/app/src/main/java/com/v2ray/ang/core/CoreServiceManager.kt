@@ -58,6 +58,9 @@ object CoreServiceManager {
 
     /** The Aether core the running configuration depends on, null when it has no Aether outbound. */
     private var currentAether: AetherCore? = null
+
+    /** The standalone Tor core the running configuration depends on, null when it has no Tor outbound. */
+    private var currentTor: TorCore? = null
     private var processFinder: XrayProcessFinder? = null
     private var browserDialer: IDialerService? = null
 
@@ -210,6 +213,7 @@ object CoreServiceManager {
         // of its chain, a routing target, a policy-group member, or the SOCKS outbounds of a custom
         // configuration that asks for it with aetherCommand. It listens on the port its arguments name.
         val aether = result.aetherCore
+        val tor = result.torCore
         if (aether != null) {
             if (!AetherCoreManager.isSupported(service)) {
                 throw StartFailure(service.getString(R.string.aether_unsupported_abi))
@@ -220,9 +224,13 @@ object CoreServiceManager {
                 refuseAether(service, guid, isReload, refusal.reason) { service.getString(refusal.message, refusal.argument) }
             }
         }
+        if (tor != null && !TorCoreManager.isSupported(service)) {
+            throw StartFailure(service.getString(R.string.tor_unsupported_abi))
+        }
         // A reload still has the previous session's core; it ends before Xray starts again. The new core,
         // if any, starts once Xray listens, see launchNativeCore.
         AetherCoreManager.stop()
+        TorCoreManager.stop()
         if (aether != null) {
             checkAetherPorts(service, guid, aether, result.content, isReload)
             // The check can take seconds. A reload starts Xray again only while the monitor that asked for it is
@@ -231,10 +239,11 @@ object CoreServiceManager {
         }
 
         try {
-            launchNativeCore(service, guid, config, aether, result.content, vpnInterface, isReload)
+            launchNativeCore(service, guid, config, aether, tor, result.content, vpnInterface, isReload)
         } catch (e: Exception) {
             // Setup failed after this attempt spawned the Aether process; release it with the rest.
             AetherCoreManager.stop()
+            TorCoreManager.stop()
             throw e
         }
         return true
@@ -299,12 +308,14 @@ object CoreServiceManager {
         guid: String,
         config: ProfileItem,
         aether: AetherCore?,
+        tor: TorCore?,
         content: String,
         vpnInterface: ParcelFileDescriptor?,
         isReload: Boolean,
     ) {
         currentConfig = config
         currentAether = aether
+        currentTor = tor
         var tunFd = vpnInterface?.fd ?: 0
         val dialerMode = BrowserDialerMode.from(config.browserDialerMode)
         val dialerAddr = if (dialerMode != null) {
@@ -332,6 +343,9 @@ object CoreServiceManager {
             // The tests were told to stop as this start began; the session's core waits for their cores to be gone.
             aetherExitHandled = false
             AetherCoreManager.start(service, aether, afterProbes = !isReload) { onAetherExit(guid) }
+        }
+        if (tor != null) {
+            TorCoreManager.start(service, tor) { onTorExit(guid) }
         }
 
         if (browserDialer != null) {
@@ -417,6 +431,20 @@ object CoreServiceManager {
         }
     }
 
+    private fun onTorExit(guid: String) {
+        val control = serviceControl?.get() ?: return
+        val service = control.getService()
+        ContextCompat.getMainExecutor(service).execute {
+            if (TorCoreManager.isRunning || !isRunning() || serviceControl?.get() !== control) return@execute
+            LogUtil.e(
+                AppConfig.TAG,
+                "StartCore-Manager: Tor core exited while running, stopping ${service.javaClass.simpleName}, guid=$guid"
+            )
+            MessageHelper.sendMsg2UI(service, AppConfig.MSG_STATE_START_FAILURE, service.getString(R.string.tor_core_stopped))
+            control.stopService()
+        }
+    }
+
     /**
      * Stops the V2Ray core service.
      * Unregisters broadcast receivers, stops notifications, and shuts down plugins.
@@ -434,6 +462,7 @@ object CoreServiceManager {
         NotificationManager.cancelNotification()
         cancelAetherWarmUp()
         AetherCoreManager.stop()
+        TorCoreManager.stop()
 
         if (isRunning()) {
             CoroutineScope(Dispatchers.IO).launch {
@@ -591,6 +620,7 @@ object CoreServiceManager {
             NotificationManager.cancelNotification()
             cancelAetherWarmUp()
             AetherCoreManager.stop()
+            TorCoreManager.stop()
             try {
                 coreController.stopLoop()
             } catch (e: Exception) {

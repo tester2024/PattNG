@@ -106,9 +106,11 @@ fun SettingsScreen(
     val isLoading by viewModel.isLoading.collectAsStateWithLifecycle()
     val systemVpnSettingsAvailable by viewModel.systemVpnSettingsAvailable.collectAsStateWithLifecycle()
     val aetherListenPort by viewModel.aetherListenPort.collectAsStateWithLifecycle()
+    val torListenPort by viewModel.torListenPort.collectAsStateWithLifecycle()
     var uiSettingsExpanded by rememberSaveable { mutableStateOf(true) }
     var vpnSettingsExpanded by rememberSaveable { mutableStateOf(true) }
     var coreSettingsExpanded by rememberSaveable { mutableStateOf(true) }
+    var torSettingsExpanded by rememberSaveable { mutableStateOf(true) }
     var muxSettingsExpanded by rememberSaveable { mutableStateOf(false) }
     var observatorySettingsExpanded by rememberSaveable { mutableStateOf(false) }
     var advancedSettingsExpanded by rememberSaveable { mutableStateOf(true) }
@@ -170,6 +172,12 @@ fun SettingsScreen(
     var dnsHosts by rememberMmkvString(AppConfig.PREF_DNS_HOSTS, "")
     var coreLogLevel by rememberMmkvString(AppConfig.PREF_LOGLEVEL, "warning")
     var outboundResolveMethod by rememberMmkvString(AppConfig.PREF_OUTBOUND_DOMAIN_RESOLVE_METHOD, AppConfig.DEFAULT_OUTBOUND_DOMAIN_RESOLVE_METHOD)
+
+    var torSnowflake by rememberMmkvBool(AppConfig.PREF_TOR_SNOWFLAKE_ENABLED, true)
+    var torLyrebird by rememberMmkvBool(AppConfig.PREF_TOR_LYREBIRD_ENABLED, true)
+    var torConjure by rememberMmkvBool(AppConfig.PREF_TOR_CONJURE_ENABLED, true)
+    var torAutoFetch by rememberMmkvBool(AppConfig.PREF_TOR_AUTO_FETCH_ENABLED, true)
+    var torCustomBridges by rememberMmkvString(AppConfig.PREF_TOR_CUSTOM_BRIDGES, "")
 
     var isBooted by rememberMmkvBool(AppConfig.PREF_IS_BOOTED, false)
     var delayTestUrl by rememberMmkvString(AppConfig.PREF_DELAY_TEST_URL, "")
@@ -502,6 +510,49 @@ fun SettingsScreen(
                     values = outboundResolveValues,
                     selectedValue = outboundResolveMethod,
                     onSelected = { outboundResolveMethod = it }
+                )
+            }
+
+            CollapsiblePreferenceGroupHeader(
+                title = stringResource(R.string.title_tor_settings),
+                expanded = torSettingsExpanded,
+                onExpandedChange = { torSettingsExpanded = it }
+            )
+            if (torSettingsExpanded) {
+                SettingsEditItem(
+                    title = stringResource(R.string.title_pref_tor_listen_port),
+                    value = torListenPort,
+                    keyboardNumber = true,
+                    onValueChanged = viewModel::setTorListenPort
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.tor_lab_snowflake),
+                    summary = stringResource(R.string.tor_summary_snowflake),
+                    checked = torSnowflake,
+                    onCheckedChange = { torSnowflake = it }
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.tor_lab_lyrebird),
+                    summary = stringResource(R.string.tor_summary_lyrebird),
+                    checked = torLyrebird,
+                    onCheckedChange = { torLyrebird = it }
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.tor_lab_conjure),
+                    summary = stringResource(R.string.tor_summary_conjure),
+                    checked = torConjure,
+                    onCheckedChange = { torConjure = it }
+                )
+                SettingsSwitchItem(
+                    title = stringResource(R.string.tor_lab_auto_fetch),
+                    summary = stringResource(R.string.tor_summary_auto_fetch),
+                    checked = torAutoFetch,
+                    onCheckedChange = { torAutoFetch = it }
+                )
+                SettingsEditItem(
+                    title = stringResource(R.string.tor_lab_custom_bridges),
+                    value = torCustomBridges,
+                    onValueChanged = { torCustomBridges = it }
                 )
             }
 

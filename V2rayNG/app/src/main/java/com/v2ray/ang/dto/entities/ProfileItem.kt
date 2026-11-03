@@ -163,6 +163,21 @@ data class ProfileItem(
 
     /** The command line of this profile's core, written by hand in place of the one built from the settings; null follows the settings. */
     var aetherCommand: String? = null,
+
+    /** Whether the Tor core enables the Snowflake pluggable transport; null follows the global Tor core setting. */
+    var torSnowflake: Boolean? = null,
+
+    /** Whether the Tor core enables the Lyrebird pluggable transport; null follows the global Tor core setting. */
+    var torLyrebird: Boolean? = null,
+
+    /** Whether the Tor core enables the Conjure pluggable transport; null follows the global Tor core setting. */
+    var torConjure: Boolean? = null,
+
+    /** Whether the Tor core automatically fetches bridges via Tor Moat; null follows the global Tor core setting. */
+    var torAutoFetch: Boolean? = null,
+
+    /** The Tor core's custom bridge lines, one per line; null follows the global Tor core setting. */
+    var torCustomBridges: String? = null,
 ) {
 
     companion object {

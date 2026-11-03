@@ -1,6 +1,7 @@
 package com.v2ray.ang.dto
 
 import com.v2ray.ang.core.AetherCore
+import com.v2ray.ang.core.TorCore
 
 data class ConfigResult(
     var status: Boolean,
@@ -11,4 +12,6 @@ data class ConfigResult(
     var localizedError: Boolean = false,
     /** The Aether core the configuration runs on, when it has an Aether outbound; the daemon starts it. */
     var aetherCore: AetherCore? = null,
+    /** The standalone Tor core the configuration runs on, when it has a Tor outbound; the daemon starts it. */
+    var torCore: TorCore? = null,
 )

@@ -789,5 +789,21 @@
     <string name="sub_info_open_support">সাপোর্ট লিঙ্ক খুলুন</string>
     <string name="sub_info_open_page">সাবস্ক্রিপশন তথ্যের পাতা খুলুন</string>
     <string name="sub_info_unlimited">সীমাহীন</string>
+    <string name="title_tor_settings">Tor কোর সেটিংস</string>
+    <string name="title_pref_tor_listen_port">Tor লিসেন পোর্ট</string>
+    <string name="toast_invalid_tor_listen_port">Tor লিসেন পোর্ট ১০২৪ থেকে ৬৫৫৩৫ এর মধ্যে হতে হবে</string>
+    <string name="toast_tor_listen_port_local_proxy">Tor লিসেন পোর্ট লোকাল প্রক্সি বা Aether কোরের সাথে পোর্ট শেয়ার করতে পারে না</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">Snowflake WebRTC প্লাগেবল ট্রান্সপোর্ট চালু করুন</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">Lyrebird (obfs4, webtunnel, meek_lite) প্লাগেবল ট্রান্সপোর্ট চালু করুন</string>
+    <string name="tor_lab_conjure">Conjure ক্লায়েন্ট</string>
+    <string name="tor_summary_conjure">Conjure প্লাগেবল ট্রান্সপোর্ট চালু করুন</string>
+    <string name="tor_lab_auto_fetch">স্বয়ংক্রিয় ব্রিজ সংগ্রহ</string>
+    <string name="tor_summary_auto_fetch">Tor Moat থেকে স্বয়ংক্রিয়ভাবে ব্রিজ সংগ্রহ করুন এবং না পেলে অন্তর্নির্মিত ব্রিজ ব্যবহার করুন</string>
+    <string name="tor_lab_custom_bridges">কাস্টম ব্রিজ</string>
+    <string name="tor_unsupported_abi">এই ডিভাইসের জন্য Tor কোর উপলব্ধ নয়</string>
+    <string name="tor_core_stopped">Tor কোর চলা বন্ধ করেছে</string>
+    <string name="menu_item_import_config_manually_tor">ম্যানুয়ালি Tor কনফিগ যোগ করুন</string>
 
 </resources>

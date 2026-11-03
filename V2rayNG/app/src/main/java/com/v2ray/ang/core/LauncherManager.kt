@@ -73,6 +73,7 @@ object LauncherManager {
     internal fun hasUsableServer(config: ProfileItem): Boolean =
         config.configType.isComplexType()
             || config.configType == EConfigType.AETHER
+            || config.configType == EConfigType.TOR
             || Utils.isPureIpAddress(config.server.orEmpty())
             || Utils.isValidUrl(config.server)
 

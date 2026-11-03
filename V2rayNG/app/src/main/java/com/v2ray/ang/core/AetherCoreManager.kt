@@ -104,6 +104,8 @@ object AetherCoreManager {
      * since it recognises the program by a file name a library cannot have.
      */
     private const val TRANSPORT_BINARY_NAME = "liblyrebird.so"
+    private const val CONJURE_BINARY_NAME = "libconjure.so"
+    private const val TOR_CORE_BINARY_NAME = "libtor.so"
     private const val PROBE_TIMEOUT_MS = 1000
     private const val READY_POLL_MS = 500L
     private const val DEFAULT_LOG_LEVEL = "info"
@@ -777,8 +779,15 @@ object AetherCoreManager {
             if (markSession) put(SESSION_ENV, "1")
             exitKey?.let { put(EXIT_ENV, it) }
             psiphonBinary(context).takeIf { it.canExecute() }?.let { put(PSIPHON_BIN_ENV, it.absolutePath) }
-            transportBinary(context).takeIf { it.canExecute() }?.let { transport ->
-                put(TOR_PT_ENV, torTransports.joinToString(";") { "$it=${transport.absolutePath}" })
+            buildList {
+                transportBinary(context).takeIf { it.canExecute() }?.let { transport ->
+                    addAll(torTransports.map { "$it=${transport.absolutePath}" })
+                }
+                conjureBinary(context).takeIf { it.canExecute() }?.let { conjure ->
+                    add("conjure=${conjure.absolutePath}")
+                }
+            }.takeIf { it.isNotEmpty() }?.let { entries ->
+                put(TOR_PT_ENV, entries.joinToString(";"))
             }
             certificateDirectories(File::isDirectory)?.let { put(CERT_DIR_ENV, it) }
             psiphonOverlay(workDir)?.let { put(PSIPHON_CONFIG_ENV, it.absolutePath) }
@@ -1242,7 +1251,12 @@ object AetherCoreManager {
 
     /** The helper processes of the app found in /proc, each with its parent pid when it could be read. */
     private fun helperProcesses(context: Context): List<Pair<Int, Int?>> {
-        val helpers = setOf(psiphonBinary(context).absolutePath, transportBinary(context).absolutePath)
+        val helpers = setOf(
+            psiphonBinary(context).absolutePath,
+            transportBinary(context).absolutePath,
+            conjureBinary(context).absolutePath,
+            torCoreBinary(context).absolutePath,
+        )
         val entries = procDir.listFiles() ?: return emptyList()
         return entries.mapNotNull { entry ->
             val pid = entry.name.toIntOrNull() ?: return@mapNotNull null
@@ -1644,6 +1658,12 @@ object AetherCoreManager {
 
     private fun transportBinary(context: Context): File =
         File(context.applicationInfo.nativeLibraryDir, TRANSPORT_BINARY_NAME)
+
+    private fun conjureBinary(context: Context): File =
+        File(context.applicationInfo.nativeLibraryDir, CONJURE_BINARY_NAME)
+
+    private fun torCoreBinary(context: Context): File =
+        File(context.applicationInfo.nativeLibraryDir, TOR_CORE_BINARY_NAME)
 
     /** The certificate directories of this device that [exists], joined the way Go reads them; null when there is none. */
     internal fun certificateDirectories(exists: (File) -> Boolean): String? =

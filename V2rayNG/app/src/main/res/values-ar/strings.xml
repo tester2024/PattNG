@@ -797,5 +797,21 @@
     <string name="sub_info_open_support">فتح رابط الدعم</string>
     <string name="sub_info_open_page">فتح صفحة معلومات الاشتراك</string>
     <string name="sub_info_unlimited">غير محدود</string>
+    <string name="title_tor_settings">إعدادات نواة Tor</string>
+    <string name="title_pref_tor_listen_port">منفذ استماع Tor</string>
+    <string name="toast_invalid_tor_listen_port">يجب أن يكون منفذ استماع Tor بين 1024 و65535</string>
+    <string name="toast_tor_listen_port_local_proxy">لا يمكن لمنفذ استماع Tor مشاركة منفذ مع الوكيل المحلي أو نواة Aether</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">تفعيل ناقل Snowflake WebRTC القابل للتوصيل</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">تفعيل نواقل Lyrebird القابلة للتوصيل (obfs4 وwebtunnel وmeek_lite)</string>
+    <string name="tor_lab_conjure">عميل Conjure</string>
+    <string name="tor_summary_conjure">تفعيل ناقل Conjure القابل للتوصيل</string>
+    <string name="tor_lab_auto_fetch">جلب الجسور تلقائيًا</string>
+    <string name="tor_summary_auto_fetch">جلب الجسور تلقائيًا من Tor Moat والاعتماد على الجسور المضمّنة عند تعذّر الوصول</string>
+    <string name="tor_lab_custom_bridges">جسور مخصصة</string>
+    <string name="tor_unsupported_abi">نواة Tor غير متوفرة لهذا الجهاز</string>
+    <string name="tor_core_stopped">توقفت نواة Tor عن العمل</string>
+    <string name="menu_item_import_config_manually_tor">إضافة إعداد Tor يدويًا</string>
 
 </resources>

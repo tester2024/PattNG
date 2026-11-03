@@ -789,5 +789,21 @@
     <string name="sub_info_open_support">باز کردن لینک پشتیبانی</string>
     <string name="sub_info_open_page">باز کردن صفحه اطلاعات اشتراک</string>
     <string name="sub_info_unlimited">نامحدود</string>
+    <string name="title_tor_settings">تنظیمات هسته تور</string>
+    <string name="title_pref_tor_listen_port">پورت شنود تور</string>
+    <string name="toast_invalid_tor_listen_port">پورت شنود تور باید بین ۱۰۲۴ و ۶۵۵۳۵ باشد</string>
+    <string name="toast_tor_listen_port_local_proxy">پورت شنود تور نمی‌تواند با پروکسی محلی یا هسته Aether مشترک باشد</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">فعال‌سازی انتقال اتصال‌پذیر Snowflake بر پایه WebRTC</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">فعال‌سازی انتقال‌های اتصال‌پذیر Lyrebird (شامل obfs4، webtunnel و meek_lite)</string>
+    <string name="tor_lab_conjure">Conjure client</string>
+    <string name="tor_summary_conjure">فعال‌سازی انتقال اتصال‌پذیر Conjure</string>
+    <string name="tor_lab_auto_fetch">دریافت خودکار پل‌ها</string>
+    <string name="tor_summary_auto_fetch">دریافت خودکار پل‌ها از Tor Moat و استفاده از پل‌های داخلی در صورت دسترس نبودن</string>
+    <string name="tor_lab_custom_bridges">پل‌های سفارشی</string>
+    <string name="tor_unsupported_abi">هسته تور برای این دستگاه در دسترس نیست</string>
+    <string name="tor_core_stopped">هسته تور متوقف شد</string>
+    <string name="menu_item_import_config_manually_tor">افزودن دستی کانفیگ Tor</string>
 
 </resources>

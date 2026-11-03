@@ -67,6 +67,14 @@ object AppConfig {
     /** PattNG: the loopback port every Aether core listens on, whatever its profile; see SettingsManager.getAetherListenPort. */
     const val PREF_AETHER_LISTEN_PORT = "pref_aether_listen_port"
 
+    /** PattNG: the settings of the standalone Tor core; see SettingsManager.getTorSettings. */
+    const val PREF_TOR_LISTEN_PORT = "pref_tor_listen_port"
+    const val PREF_TOR_SNOWFLAKE_ENABLED = "pref_tor_snowflake_enabled"
+    const val PREF_TOR_LYREBIRD_ENABLED = "pref_tor_lyrebird_enabled"
+    const val PREF_TOR_CONJURE_ENABLED = "pref_tor_conjure_enabled"
+    const val PREF_TOR_AUTO_FETCH_ENABLED = "pref_tor_auto_fetch_enabled"
+    const val PREF_TOR_CUSTOM_BRIDGES = "pref_tor_custom_bridges"
+
     /** PattNG: the settings of the page that gets new WARP keys, which no profile shares; see AetherKeysSettings. */
     const val PREF_AETHER_KEYS_KIND = "pref_aether_keys_kind"
     const val PREF_AETHER_KEYS_ENROLL_ADDRESS = "pref_aether_keys_enroll_address"
@@ -196,6 +204,7 @@ object AppConfig {
     const val PORT_LOCAL_DNS = "10853"
     const val PORT_SOCKS = "10808"
     const val PORT_AETHER_SOCKS = "10819"
+    const val PORT_TOR_SOCKS = "10829"
 
     /** PattNG: where the Aether core asks for the ECH key, and the domain whose key it takes, unless a profile names others. */
     const val AETHER_ECH_DNS = "udp://1.1.1.1"
@@ -280,6 +289,7 @@ object AppConfig {
     const val HY2 = "hy2://"
     const val V2RAYNFMTS = "v2rayn://"
     const val AETHER = "aether://"
+    const val TOR = "tor://"
 
     /** Give a good name to this, IDK*/
     const val VPN = "VPN"

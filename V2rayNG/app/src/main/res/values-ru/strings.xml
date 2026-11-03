@@ -793,5 +793,21 @@
     <string name="sub_info_open_support">Открыть ссылку поддержки</string>
     <string name="sub_info_open_page">Открыть страницу подписки</string>
     <string name="sub_info_unlimited">Без ограничений</string>
+    <string name="title_tor_settings">Настройки ядра Tor</string>
+    <string name="title_pref_tor_listen_port">Порт прослушивания Tor</string>
+    <string name="toast_invalid_tor_listen_port">Порт прослушивания Tor должен быть от 1024 до 65535</string>
+    <string name="toast_tor_listen_port_local_proxy">Порт прослушивания Tor не может совпадать с портом локального прокси или ядра Aether</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">Включить подключаемый транспорт Snowflake WebRTC</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">Включить подключаемые транспорты Lyrebird (obfs4, webtunnel, meek_lite)</string>
+    <string name="tor_lab_conjure">Клиент Conjure</string>
+    <string name="tor_summary_conjure">Включить подключаемый транспорт Conjure</string>
+    <string name="tor_lab_auto_fetch">Автополучение мостов</string>
+    <string name="tor_summary_auto_fetch">Автоматически запрашивать мосты через Tor Moat и использовать встроенные мосты при недоступности</string>
+    <string name="tor_lab_custom_bridges">Пользовательские мосты</string>
+    <string name="tor_unsupported_abi">Ядро Tor недоступно для этого устройства</string>
+    <string name="tor_core_stopped">Ядро Tor остановилось</string>
+    <string name="menu_item_import_config_manually_tor">Добавить конфигурацию Tor вручную</string>
 
 </resources>

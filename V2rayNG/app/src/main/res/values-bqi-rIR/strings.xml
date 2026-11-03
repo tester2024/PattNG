@@ -789,5 +789,21 @@
     <string name="sub_info_open_support">واز کردن لینگ پشتیوانی</string>
     <string name="sub_info_open_page">واز کردن صفحه اطلاعات اشتراک</string>
     <string name="sub_info_unlimited">بی‌حد</string>
+    <string name="title_tor_settings">تنظیمات هسته تور</string>
+    <string name="title_pref_tor_listen_port">پورت گوش‌دادن تور</string>
+    <string name="toast_invalid_tor_listen_port">پورت گوش‌دادن تور باید مین ۱۰۲۴ تا ۶۵۵۳۵ بۊ</string>
+    <string name="toast_tor_listen_port_local_proxy">پورت گوش‌دادن تور نیتره وا پروکسی محلی یا هسته Aether یکی بۊ</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">روشن کردن انتقال Snowflake بر پایه WebRTC</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">روشن کردن انتقال‌یای Lyrebird (شامل obfs4، webtunnel و meek_lite)</string>
+    <string name="tor_lab_conjure">Conjure client</string>
+    <string name="tor_summary_conjure">روشن کردن انتقال Conjure</string>
+    <string name="tor_lab_auto_fetch">گرهدن خودکار پل‌یا</string>
+    <string name="tor_summary_auto_fetch">گرهدن خودکار پل‌یا زه Tor Moat و استفاده زه پل‌یای داخلی</string>
+    <string name="tor_lab_custom_bridges">پل‌یای دلخواه</string>
+    <string name="tor_unsupported_abi">هسته تور سی ای دستگاه من دسترس نئ</string>
+    <string name="tor_core_stopped">هسته تور وستا</string>
+    <string name="menu_item_import_config_manually_tor">اضاف کردن دستی کانفیگ Tor</string>
 
 </resources>

@@ -12,6 +12,8 @@ import com.v2ray.ang.AppConfig.TAG_DIRECT
 import com.v2ray.ang.AppConfig.VPN
 import com.v2ray.ang.core.AetherCoreManager
 import com.v2ray.ang.core.PsiphonServerList
+import com.v2ray.ang.core.TorCoreManager
+import com.v2ray.ang.core.TorSettings
 import com.v2ray.ang.dto.ByName
 import com.v2ray.ang.dto.V2rayConfig
 import com.v2ray.ang.dto.entities.ProfileItem
@@ -375,6 +377,18 @@ object SettingsManager {
     fun getAetherListenPort(): Int =
         AetherCoreManager.listenPortOf(MmkvManager.decodeSettingsString(AppConfig.PREF_AETHER_LISTEN_PORT))
 
+    fun getTorListenPort(): Int =
+        TorCoreManager.listenPortOf(MmkvManager.decodeSettingsString(AppConfig.PREF_TOR_LISTEN_PORT))
+
+    fun getTorSettings(): TorSettings = TorSettings(
+        listenPort = getTorListenPort(),
+        snowflake = MmkvManager.decodeSettingsBool(AppConfig.PREF_TOR_SNOWFLAKE_ENABLED, true),
+        lyrebird = MmkvManager.decodeSettingsBool(AppConfig.PREF_TOR_LYREBIRD_ENABLED, true),
+        conjure = MmkvManager.decodeSettingsBool(AppConfig.PREF_TOR_CONJURE_ENABLED, true),
+        autoFetch = MmkvManager.decodeSettingsBool(AppConfig.PREF_TOR_AUTO_FETCH_ENABLED, true),
+        customBridges = MmkvManager.decodeSettingsString(AppConfig.PREF_TOR_CUSTOM_BRIDGES).orEmpty(),
+    )
+
     private fun IsDynamicSocksPort(): Boolean {
         return MmkvManager.decodeSettingsBool(AppConfig.PREF_DYNAMIC_SOCKS_PORT, false)
     }
@@ -609,6 +623,7 @@ object SettingsManager {
         ensureDefaultValue(AppConfig.PREF_VPN_MTU, AppConfig.VPN_MTU.toString())
         ensureDefaultValue(AppConfig.PREF_SOCKS_PORT, AppConfig.PORT_SOCKS)
         ensureDefaultValue(AppConfig.PREF_AETHER_LISTEN_PORT, AppConfig.PORT_AETHER_SOCKS)
+        ensureDefaultValue(AppConfig.PREF_TOR_LISTEN_PORT, AppConfig.PORT_TOR_SOCKS)
         ensureDefaultValue(AppConfig.PREF_REMOTE_DNS, AppConfig.DNS_PROXY)
         ensureDefaultValue(AppConfig.PREF_DOMESTIC_DNS, AppConfig.DNS_DIRECT)
         ensureDefaultValue(AppConfig.PREF_DELAY_TEST_URL, AppConfig.DELAY_TEST_URL)

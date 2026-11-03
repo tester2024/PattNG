@@ -787,5 +787,21 @@
     <string name="sub_info_open_support">Mở liên kết hỗ trợ</string>
     <string name="sub_info_open_page">Mở trang thông tin đăng ký</string>
     <string name="sub_info_unlimited">Không giới hạn</string>
+    <string name="title_tor_settings">Cài đặt lõi Tor</string>
+    <string name="title_pref_tor_listen_port">Cổng lắng nghe Tor</string>
+    <string name="toast_invalid_tor_listen_port">Cổng lắng nghe Tor phải nằm trong khoảng từ 1024 đến 65535</string>
+    <string name="toast_tor_listen_port_local_proxy">Cổng lắng nghe Tor không được trùng với cổng proxy cục bộ hoặc lõi Aether</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">Bật truyền tải kết nối Snowflake WebRTC</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">Bật truyền tải kết nối Lyrebird (obfs4, webtunnel, meek_lite)</string>
+    <string name="tor_lab_conjure">Conjure client</string>
+    <string name="tor_summary_conjure">Bật truyền tải kết nối Conjure</string>
+    <string name="tor_lab_auto_fetch">Tự động lấy bridge</string>
+    <string name="tor_summary_auto_fetch">Tự động lấy bridge từ Tor Moat và dự phòng bằng bridge tích hợp sẵn</string>
+    <string name="tor_lab_custom_bridges">Bridge tùy chỉnh</string>
+    <string name="tor_unsupported_abi">Lõi Tor không khả dụng cho thiết bị này</string>
+    <string name="tor_core_stopped">Lõi Tor đã dừng chạy</string>
+    <string name="menu_item_import_config_manually_tor">Thêm cấu hình Tor thủ công</string>
 
 </resources>

@@ -798,5 +798,21 @@
     <string name="sub_info_open_page">Open subscription page</string>
     <string name="sub_info_traffic" translatable="false">%1$s / %2$s</string>
     <string name="sub_info_unlimited">Unlimited</string>
+    <string name="title_tor_settings">Tor core settings</string>
+    <string name="title_pref_tor_listen_port">Tor listen port</string>
+    <string name="toast_invalid_tor_listen_port">The Tor listen port must be between 1024 and 65535</string>
+    <string name="toast_tor_listen_port_local_proxy">The Tor listen port cannot share a port with the local proxy or the Aether core</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">Enable the Snowflake WebRTC pluggable transport</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">Enable Lyrebird (obfs4, webtunnel, meek_lite) pluggable transports</string>
+    <string name="tor_lab_conjure">Conjure client</string>
+    <string name="tor_summary_conjure">Enable the Conjure refraction-networking pluggable transport</string>
+    <string name="tor_lab_auto_fetch">Auto-fetch bridges</string>
+    <string name="tor_summary_auto_fetch">Automatically fetch bridges from Tor Moat and fall back to built-in bridges</string>
+    <string name="tor_lab_custom_bridges">Custom bridges</string>
+    <string name="tor_unsupported_abi">The Tor core is not available for this device</string>
+    <string name="tor_core_stopped">The Tor core stopped running</string>
+    <string name="menu_item_import_config_manually_tor">Add Tor config manually</string>
 
 </resources>

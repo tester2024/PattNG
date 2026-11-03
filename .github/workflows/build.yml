@@ -143,12 +143,52 @@ jobs:
         path: ${{ github.workspace }}/libs-pt
         key: pt-${{ runner.os }}-${{ env.GO_VERSION }}-${{ hashFiles('aether/pt-build.sh') }}-${{ hashFiles('compile-pt.sh') }}
 
+    - name: Restore cached Tor core
+      id: cache-tor-restore
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ github.workspace }}/libs-tor
+        key: tor-${{ runner.os }}-${{ env.GO_VERSION }}-${{ hashFiles('tor-core/**') }}-${{ hashFiles('compile-tor.sh') }}
+
+    - name: Build Tor core
+      if: steps.cache-tor-restore.outputs.cache-hit != 'true'
+      run: |
+        bash compile-tor.sh
+
+    - name: Save Tor core
+      if: steps.cache-tor-restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ github.workspace }}/libs-tor
+        key: tor-${{ runner.os }}-${{ env.GO_VERSION }}-${{ hashFiles('tor-core/**') }}-${{ hashFiles('compile-tor.sh') }}
+
+    - name: Restore cached Conjure client
+      id: cache-conjure-restore
+      uses: actions/cache/restore@v6
+      with:
+        path: ${{ github.workspace }}/libs-conjure
+        key: conjure-${{ runner.os }}-${{ env.GO_VERSION }}-${{ hashFiles('tor-core/**') }}-${{ hashFiles('compile-conjure.sh') }}
+
+    - name: Build Conjure client
+      if: steps.cache-conjure-restore.outputs.cache-hit != 'true'
+      run: |
+        bash compile-conjure.sh
+
+    - name: Save Conjure client
+      if: steps.cache-conjure-restore.outputs.cache-hit != 'true'
+      uses: actions/cache/save@v6
+      with:
+        path: ${{ github.workspace }}/libs-conjure
+        key: conjure-${{ runner.os }}-${{ env.GO_VERSION }}-${{ hashFiles('tor-core/**') }}-${{ hashFiles('compile-conjure.sh') }}
+
     - name: Stage the native libraries
       run: |
         cp -r ${{ github.workspace }}/libs ${{ github.workspace }}/V2rayNG/app
         cp -r ${{ github.workspace }}/libs-aether/. ${{ github.workspace }}/V2rayNG/app/libs/
         cp -r ${{ github.workspace }}/libs-psiphon/. ${{ github.workspace }}/V2rayNG/app/libs/
         cp -r ${{ github.workspace }}/libs-pt/. ${{ github.workspace }}/V2rayNG/app/libs/
+        cp -r ${{ github.workspace }}/libs-tor/. ${{ github.workspace }}/V2rayNG/app/libs/
+        cp -r ${{ github.workspace }}/libs-conjure/. ${{ github.workspace }}/V2rayNG/app/libs/
 
     # Psiphon's client starts with the newest server list the build could fetch, so a fresh install has
     # servers before it can reach the list on its own; see fetch-psiphon-servers.sh.
@@ -207,7 +247,7 @@ jobs:
           echo "$entries" | sed 's/^/  /'
           for abi in arm64-v8a armeabi-v7a x86_64; do
             echo "$entries" | grep -q "^lib/$abi/" || continue
-            for lib in libaether.so libpsiphon-tunnel-core.so liblyrebird.so; do
+            for lib in libaether.so libpsiphon-tunnel-core.so liblyrebird.so libtor.so libconjure.so; do
               if ! echo "$entries" | grep -qx "lib/$abi/$lib"; then
                 echo "::error::$(basename "$apk") lacks lib/$abi/$lib"
                 status=1

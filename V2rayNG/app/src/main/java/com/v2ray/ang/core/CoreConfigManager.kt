@@ -65,7 +65,18 @@ object CoreConfigManager {
                 // The key of the exit-node carries the content of that profile, so that a test tells it from a changed one.
                 withNodeContent(routed, node)
             }
-            return toConfigResult(context, configContext, v2rayConfig, core)
+            val torCore = configContext.resolvedOutbounds.asSequence()
+                .flatMap { it.resolvedProfiles.asSequence() }
+                .firstOrNull { it.configType == EConfigType.TOR }
+                ?.let { profile ->
+                    val initialTor = TorCore.of(profile)
+                    if (core == null) {
+                        routeTorThroughXray(v2rayConfig, initialTor, secondaryPort) ?: return secondaryPortFailure(context, guid, secondaryPort)
+                    } else {
+                        initialTor.through(secondaryPort)
+                    }
+                }
+            return toConfigResult(context, configContext, v2rayConfig, core, torCore)
         } catch (e: Exception) {
             LogUtil.e(AppConfig.TAG, "Failed to get V2ray config", e)
             return ConfigResult(
@@ -112,7 +123,11 @@ object CoreConfigManager {
             val core = (dependency as? AetherDependency.Single)?.core
             if (core != null && lacksChainHop(core, v2rayConfig.outbounds)) return chainHopFailure(context, guid)
             if (core != null) exitNodeProblem(core, v2rayConfig.outbounds)?.let { return exitNodeFailure(context, guid, core, it) }
-            return toConfigResult(context, configContext, v2rayConfig, core)
+            val torCore = configContext.resolvedOutbounds.take(1).asSequence()
+                .flatMap { it.resolvedProfiles.asSequence() }
+                .firstOrNull { it.configType == EConfigType.TOR }
+                ?.let { TorCore.of(it) }
+            return toConfigResult(context, configContext, v2rayConfig, core, torCore)
         } catch (e: Exception) {
             LogUtil.e(AppConfig.TAG, "Failed to get V2ray config for speedtest", e)
             return ConfigResult(
@@ -607,6 +622,7 @@ object CoreConfigManager {
         configContext: CoreConfigContext,
         v2rayConfig: V2rayConfig,
         core: AetherCore?,
+        torCore: TorCore? = null,
     ): ConfigResult {
         v2rayConfig.aetherCommand = core?.command
         // PattNG: the ECH outbounds of the profiles get their tags and go after every other outbound, as written
@@ -629,7 +645,39 @@ object CoreConfigManager {
             guid = configContext.guid,
             content = content,
             aetherCore = core,
+            torCore = torCore,
         )
+    }
+
+    internal fun routeTorThroughXray(
+        v2rayConfig: V2rayConfig,
+        core: TorCore,
+        port: Int,
+    ): TorCore? {
+        if (v2rayConfig.inbounds.any { it.port == port }) return null
+        val exitNode = if (v2rayConfig.outbounds.any { it.tag == AppConfig.TAG_EXIT_NODE }) {
+            null
+        } else {
+            CoreOutboundBuilder.toOutboundAetherExit(AetherExit.PLAIN) ?: return null
+        }
+        v2rayConfig.inbounds.add(
+            V2rayConfig.InboundBean(
+                tag = AppConfig.TAG_SECONDARY_SOCKS,
+                port = port,
+                protocol = "mixed",
+                listen = AppConfig.LOOPBACK,
+                settings = V2rayConfig.InboundBean.InSettingsBean(udp = true),
+            )
+        )
+        if (exitNode != null) v2rayConfig.outbounds.add(exitNode)
+        v2rayConfig.routing.rules.add(
+            0,
+            V2rayConfig.RoutingBean.RulesBean(
+                inboundTag = listOf(AppConfig.TAG_SECONDARY_SOCKS),
+                outboundTag = AppConfig.TAG_EXIT_NODE,
+            )
+        )
+        return core.through(port)
     }
 
     /**

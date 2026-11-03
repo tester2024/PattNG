@@ -787,5 +787,21 @@
     <string name="sub_info_open_support">開啟支援連結</string>
     <string name="sub_info_open_page">開啟訂閱資訊頁面</string>
     <string name="sub_info_unlimited">無限制</string>
+    <string name="title_tor_settings">Tor 核心設定</string>
+    <string name="title_pref_tor_listen_port">Tor 監聽連接埠</string>
+    <string name="toast_invalid_tor_listen_port">Tor 監聽連接埠必須介於 1024 到 65535 之間</string>
+    <string name="toast_tor_listen_port_local_proxy">Tor 監聽連接埠不能與本機代理或 Aether 核心共用連接埠</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">啟用基於 WebRTC 的 Snowflake 可插拔傳輸</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">啟用 Lyrebird（obfs4、webtunnel、meek_lite）可插拔傳輸</string>
+    <string name="tor_lab_conjure">Conjure 用戶端</string>
+    <string name="tor_summary_conjure">啟用 Conjure 折射網路可插拔傳輸</string>
+    <string name="tor_lab_auto_fetch">自動取得橋接</string>
+    <string name="tor_summary_auto_fetch">自動從 Tor Moat 取得橋接並在無法連線時退回內建橋接</string>
+    <string name="tor_lab_custom_bridges">自訂橋接</string>
+    <string name="tor_unsupported_abi">此裝置不支援 Tor 核心</string>
+    <string name="tor_core_stopped">Tor 核心已停止執行</string>
+    <string name="menu_item_import_config_manually_tor">手動新增 Tor 設定</string>
 
 </resources>

@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.v2ray.ang.AppConfig
 import com.v2ray.ang.R
 import com.v2ray.ang.core.AetherCoreManager
+import com.v2ray.ang.core.TorCoreManager
 import com.v2ray.ang.handler.MmkvManager
 import com.v2ray.ang.handler.SettingsChangeManager
 import com.v2ray.ang.handler.SettingsManager
@@ -28,13 +29,21 @@ class SettingsViewModel(application: Application) : BaseViewModel(application) {
     private val _aetherListenPort = MutableStateFlow("")
     val aetherListenPort: StateFlow<String> = _aetherListenPort.asStateFlow()
 
+    /** PattNG: the Tor core listen port as the setting holds it, blank for the default. */
+    private val _torListenPort = MutableStateFlow("")
+    val torListenPort: StateFlow<String> = _torListenPort.asStateFlow()
+
     init {
         viewModelScope.launch {
-            val stored = withContext(Dispatchers.IO) {
+            val storedAether = withContext(Dispatchers.IO) {
                 MmkvManager.decodeSettingsString(AppConfig.PREF_AETHER_LISTEN_PORT).orEmpty()
             }
+            val storedTor = withContext(Dispatchers.IO) {
+                MmkvManager.decodeSettingsString(AppConfig.PREF_TOR_LISTEN_PORT).orEmpty()
+            }
             // A port set in the meantime is newer than the one read.
-            _aetherListenPort.compareAndSet("", stored)
+            _aetherListenPort.compareAndSet("", storedAether)
+            _torListenPort.compareAndSet("", storedTor)
         }
     }
 
@@ -109,6 +118,33 @@ class SettingsViewModel(application: Application) : BaseViewModel(application) {
 
             AetherCoreManager.ListenPortProblem.LOCAL_PROXY -> {
                 toastError(R.string.toast_aether_listen_port_local_proxy)
+                null
+            }
+        }
+    }
+
+    fun setTorListenPort(value: String) {
+        val port = validateTorListenPort(value) ?: return
+        if (port == _torListenPort.value) return
+        _torListenPort.value = port
+        viewModelScope.launch(Dispatchers.IO) {
+            MmkvManager.encodeSettings(AppConfig.PREF_TOR_LISTEN_PORT, _torListenPort.value)
+            SettingsChangeManager.notifySettingChanged(AppConfig.PREF_TOR_LISTEN_PORT)
+        }
+    }
+
+    private fun validateTorListenPort(value: String): String? {
+        val port = value.trim()
+        return when (TorCoreManager.listenPortProblem(port, SettingsManager.getLocalProxyPorts(), SettingsManager.getAetherListenPort())) {
+            null -> port
+            TorCoreManager.ListenPortProblem.NOT_A_PORT -> {
+                toastError(R.string.toast_invalid_tor_listen_port)
+                null
+            }
+
+            TorCoreManager.ListenPortProblem.LOCAL_PROXY,
+            TorCoreManager.ListenPortProblem.AETHER_PORT -> {
+                toastError(R.string.toast_tor_listen_port_local_proxy)
                 null
             }
         }

@@ -790,5 +790,21 @@
     <string name="sub_info_open_page">Abunəlik səhifəsini aç</string>
     <string name="sub_info_traffic" translatable="false">%1$s / %2$s</string>
     <string name="sub_info_unlimited">Limitsiz</string>
+    <string name="title_tor_settings">Tor nüvəsi tənzimləmələri</string>
+    <string name="title_pref_tor_listen_port">Tor dinləmə portu</string>
+    <string name="toast_invalid_tor_listen_port">Tor dinləmə portu 1024 ilə 65535 arasında olmalıdır</string>
+    <string name="toast_tor_listen_port_local_proxy">Tor dinləmə portu yerli proksi və ya Aether nüvəsi ilə eyni portu paylaşa bilməz</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">Snowflake WebRTC qoşula bilən nəqliyyatını aktivləşdir</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">Lyrebird (obfs4, webtunnel, meek_lite) qoşula bilən nəqliyyatlarını aktivləşdir</string>
+    <string name="tor_lab_conjure">Conjure müştərisi</string>
+    <string name="tor_summary_conjure">Conjure qoşula bilən nəqliyyatını aktivləşdir</string>
+    <string name="tor_lab_auto_fetch">Körpüləri avtomatik əldə et</string>
+    <string name="tor_summary_auto_fetch">Tor Moat vasitəsilə körpüləri avtomatik əldə et və əlçatmaz olduqda daxili körpülərə keç</string>
+    <string name="tor_lab_custom_bridges">Fərdi körpülər</string>
+    <string name="tor_unsupported_abi">Tor nüvəsi bu cihaz üçün mövcud deyil</string>
+    <string name="tor_core_stopped">Tor nüvəsi dayandı</string>
+    <string name="menu_item_import_config_manually_tor">Tor konfiqurasiyasını əllə əlavə et</string>
 
 </resources>

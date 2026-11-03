@@ -32,13 +32,14 @@ object CoreOutboundBuilder {
             EConfigType.HYSTERIA2 -> toOutboundHysteria2(profileItem)
             EConfigType.HTTP -> toOutboundHttp(profileItem)
             EConfigType.AETHER -> toOutboundAether(profileItem)
+            EConfigType.TOR -> toOutboundTor(profileItem)
             else -> null
         }
 
         outbound ?: return null
         // PattNG: an Aether profile's outbound only reaches its core on the loopback address; its dialMode is
         // that of the exit-node its traffic leaves Xray by, see toOutboundAetherExit.
-        if (profileItem.configType != EConfigType.AETHER) applyDialMode(outbound, profileItem)
+        if (profileItem.configType != EConfigType.AETHER && profileItem.configType != EConfigType.TOR) applyDialMode(outbound, profileItem)
         applyTargetStrategy(outbound, profileItem)
         val ret = updateOutboundWithGlobalSettings(outbound)
         if (!ret) return null
@@ -300,6 +301,17 @@ object CoreOutboundBuilder {
         outboundBean?.settings?.let { settings ->
             settings.address = AppConfig.LOOPBACK
             settings.port = AetherCore.of(profileItem).port
+        }
+
+        return outboundBean
+    }
+
+    private fun toOutboundTor(profileItem: ProfileItem): OutboundBean? {
+        val outboundBean = createInitOutbound(EConfigType.SOCKS)
+
+        outboundBean?.settings?.let { settings ->
+            settings.address = AppConfig.LOOPBACK
+            settings.port = TorCore.of(profileItem).port
         }
 
         return outboundBean

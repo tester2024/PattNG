@@ -15,6 +15,7 @@ import com.v2ray.ang.AppConfig.WIREGUARD_LOCAL_REMOTE_DNS
 import com.v2ray.ang.core.AetherCore
 import com.v2ray.ang.core.AetherCoreManager
 import com.v2ray.ang.core.CoreOutboundBuilder
+import com.v2ray.ang.core.TorCoreManager
 import com.v2ray.ang.dto.entities.ProfileItem
 import com.v2ray.ang.enums.AetherFingerprint
 import com.v2ray.ang.enums.AetherIpVersion
@@ -115,7 +116,12 @@ class ServerUiState(
     aetherTorBridges: String = AetherTorBridges.AUTO.type,
     aetherTorBridgeLines: String = "",
     aetherTorRelays: String = AetherTorRelays.AUTO.type,
-    aetherCommand: String = ""
+    aetherCommand: String = "",
+    torSnowflake: Boolean = true,
+    torLyrebird: Boolean = true,
+    torConjure: Boolean = true,
+    torAutoFetch: Boolean = true,
+    torCustomBridges: String = "",
 ) {
     var configType by mutableStateOf(configType)
     var remarks by mutableStateOf(remarks)
@@ -212,6 +218,11 @@ class ServerUiState(
     var aetherTorBridgeLines by mutableStateOf(aetherTorBridgeLines)
     var aetherTorRelays by mutableStateOf(aetherTorRelays)
     var aetherCommand by mutableStateOf(aetherCommand)
+    var torSnowflake by mutableStateOf(torSnowflake)
+    var torLyrebird by mutableStateOf(torLyrebird)
+    var torConjure by mutableStateOf(torConjure)
+    var torAutoFetch by mutableStateOf(torAutoFetch)
+    var torCustomBridges by mutableStateOf(torCustomBridges)
 
     /**
      * Whether an Aether setting the editor keeps folded away holds a value of its own, so that the
@@ -259,6 +270,7 @@ class ServerUiState(
         val isWireguard = configType == EConfigType.WIREGUARD
         val isHysteria2 = configType == EConfigType.HYSTERIA2
         val isAether = configType == EConfigType.AETHER
+        val isTorProfile = configType == EConfigType.TOR
         val isPsiphon = isAether && aetherPsiphon != AetherPsiphon.OFF.type
         val isTor = isAether && aetherTor != AetherTor.OFF.type
 
@@ -357,6 +369,11 @@ class ServerUiState(
             aetherTorBridgeLines = if (isTor) aetherTorBridgeLines.nullIfBlank() else null,
             aetherTorRelays = if (isTor) aetherTorRelays else null,
             aetherCommand = null,
+            torSnowflake = if (isTorProfile) torSnowflake else null,
+            torLyrebird = if (isTorProfile) torLyrebird else null,
+            torConjure = if (isTorProfile) torConjure else null,
+            torAutoFetch = if (isTorProfile) torAutoFetch else null,
+            torCustomBridges = if (isTorProfile) torCustomBridges.nullIfBlank() else null,
         )
         // A command that says what the settings say is no command of its own: the profile follows the settings.
         val command = aetherCommand.trim()
@@ -375,13 +392,14 @@ class ServerUiState(
     companion object {
         fun fromProfileItem(
             initialConfig: ProfileItem
-        ): ServerUiState =
-            ServerUiState(
+        ): ServerUiState {
+            val torDefaults = TorCoreManager.settingsSource()
+            return ServerUiState(
                 configType = initialConfig.configType,
                 remarks = initialConfig.remarks,
                 address = initialConfig.server ?: "",
                 port = initialConfig.serverPort
-                    ?: if (initialConfig.configType == EConfigType.AETHER) "" else DEFAULT_PORT.toString(),
+                    ?: if (initialConfig.configType == EConfigType.AETHER || initialConfig.configType == EConfigType.TOR) "" else DEFAULT_PORT.toString(),
                 password = initialConfig.password ?: "",
                 method = initialConfig.method ?: "",
                 flow = initialConfig.flow ?: "",
@@ -461,8 +479,14 @@ class ServerUiState(
                 aetherTorBridges = AetherTorBridges.fromString(initialConfig.aetherTorBridges).type,
                 aetherTorBridgeLines = initialConfig.aetherTorBridgeLines ?: "",
                 aetherTorRelays = AetherTorRelays.fromString(initialConfig.aetherTorRelays).type,
-                aetherCommand = initialConfig.aetherCommand ?: ""
+                aetherCommand = initialConfig.aetherCommand ?: "",
+                torSnowflake = initialConfig.torSnowflake ?: torDefaults.snowflake,
+                torLyrebird = initialConfig.torLyrebird ?: torDefaults.lyrebird,
+                torConjure = initialConfig.torConjure ?: torDefaults.conjure,
+                torAutoFetch = initialConfig.torAutoFetch ?: torDefaults.autoFetch,
+                torCustomBridges = initialConfig.torCustomBridges ?: torDefaults.customBridges,
             )
+        }
 
         fun from(
             initialConfig: ProfileItem

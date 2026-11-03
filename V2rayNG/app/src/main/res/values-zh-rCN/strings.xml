@@ -787,5 +787,21 @@
     <string name="sub_info_open_support">打开支持链接</string>
     <string name="sub_info_open_page">打开订阅信息页面</string>
     <string name="sub_info_unlimited">无限制</string>
+    <string name="title_tor_settings">Tor 内核设置</string>
+    <string name="title_pref_tor_listen_port">Tor 监听端口</string>
+    <string name="toast_invalid_tor_listen_port">Tor 监听端口必须在 1024 到 65535 之间</string>
+    <string name="toast_tor_listen_port_local_proxy">Tor 监听端口不能与本地代理或 Aether 内核共用端口</string>
+    <string name="tor_lab_snowflake">Snowflake</string>
+    <string name="tor_summary_snowflake">启用基于 WebRTC 的 Snowflake 可插拔传输</string>
+    <string name="tor_lab_lyrebird">Lyrebird</string>
+    <string name="tor_summary_lyrebird">启用 Lyrebird（obfs4、webtunnel、meek_lite）可插拔传输</string>
+    <string name="tor_lab_conjure">Conjure 客户端</string>
+    <string name="tor_summary_conjure">启用 Conjure 折射网络可插拔传输</string>
+    <string name="tor_lab_auto_fetch">自动获取网桥</string>
+    <string name="tor_summary_auto_fetch">自动从 Tor Moat 获取网桥并在不可达时回退到内置网桥</string>
+    <string name="tor_lab_custom_bridges">自定义网桥</string>
+    <string name="tor_unsupported_abi">此设备不支持 Tor 内核</string>
+    <string name="tor_core_stopped">Tor 内核已停止运行</string>
+    <string name="menu_item_import_config_manually_tor">手动添加 Tor 配置</string>
 
 </resources>
